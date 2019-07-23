@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)..\..\..\build\$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\..\..\build\temp\$(Platform)_$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(ProjectDir)..\..\..\source\;$(ProjectDir)..\..\..\external\cameron_gjk\;$(ProjectDir)..\..\..\external\expat\lib\;$(ProjectDir)..\..\..\external\gl\;$(ProjectDir)..\..\..\external\libjpeg\;$(ProjectDir)..\..\..\external\libogg\include\;$(ProjectDir)..\..\..\external\libpng\;$(ProjectDir)..\..\..\external\libvorbis\include\;$(ProjectDir)..\..\..\external\zlib\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

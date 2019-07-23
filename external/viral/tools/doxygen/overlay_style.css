@@ -1,0 +1,148 @@
+/******************************************************************************
+ * CSS overlay for doxygen
+ * Modifications on the default stylesheet for a more clean output...
+ *******************************************************************************/
+
+
+/* Some paddings make text more readable */
+div.contents
+{
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+div.header
+{
+	padding-left: 15px;
+}
+
+div.levels
+{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.directory td
+{
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.memberdecls td
+{
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+
+/* Heading Levels */
+h1
+{
+	font-size: 150%;
+	margin-left: 10px;
+}
+
+h2
+{
+	font-size: 125%;
+	margin-left: 10px;
+	margin-top: 30px;
+}
+
+h3
+{
+	font-size: 100%;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+h3.version
+{
+    font-size: 90%;
+	margin-left: 15px;
+}
+
+
+/* Various list entries */
+dt
+{
+	font-weight: bold;
+	padding-left: 10px;
+}
+
+p.endli { margin-bottom: 2px; }
+
+li
+{
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+
+
+/* Rule distances. Currently invisible, since hard-coded
+ * at the top of Detailed Description. */
+hr
+{
+    display: none;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+
+/* Link styling */
+a
+{
+	color: #153788;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.contents a:visited { color: #1b77c5; }
+
+a.code { color: #3030f0; }
+a.codeRef { color: #3030f0; }
+
+
+/** Restyle member definition list to make it more readable */
+.memproto
+{
+		margin-top: 5px;
+        border: 1px solid #ccc;
+        color: #353535;
+        font-weight: bold;
+        background-image: none;
+
+		/* html5 new stuff */
+		text-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
+		box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+		border-radius: 0px;
+        
+        /* firefox specific markup */
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+        -moz-border-radius: 0px;
+        
+        /* webkit specific markup */
+        -webkit-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+        -webkit-border-radius: 0px;
+}
+
+.memdoc
+{
+		margin-bottom: 5px;
+        border: 1px solid #AFAFAF;
+        background-image: none;
+        
+		/* html5 new stuff */
+		text-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
+		box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+		border-radius: 0px;
+        		
+        /* firefox specific markup */
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+        -moz-border-radius: 0px;
+        
+        /* webkit specific markup */
+        -webkit-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+        -webkit-border-radius: 0px;
+}
+

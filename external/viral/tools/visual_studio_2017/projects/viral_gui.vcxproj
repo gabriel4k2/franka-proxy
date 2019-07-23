@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\viral_gui\gui.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_anchor.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_app.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_button.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_color_dialog.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_dropdown.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_edit.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_editbox.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_edit_kernel.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_edit_lines.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_element.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_element_loader.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_event.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_file_dialog.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_frame.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_grid.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_image.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_image_map.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_knob.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_label.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_list.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_listbox.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_modal.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_msgbox.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_progress_bar.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_progress_box.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_render.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_scrollbar.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_scroll_area.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_slider.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_spacer.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_split.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_stack.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_string_dialog.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_style_loader.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_style_util.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_tabview.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_tooltip.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_tooltip_area.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_tooltip_data.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_tristate.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_value_edit.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_viewport.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_window.cpp" />
+    <ClCompile Include="..\..\..\source\viral_gui\gui_window_area.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\source\viral_gui\gui.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_anchor.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_app.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_button.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_color_dialog.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_dropdown.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_edit.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_editbox.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_edit_kernel.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_edit_lines.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_element.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_element_loader.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_event.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_event_handler.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_file_dialog.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_forward.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_frame.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_grid.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_image.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_image_map.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_knob.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_label.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_list.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_listbox.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_modal.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_msgbox.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_progress_bar.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_progress_box.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_render.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_scrollbar.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_scroll_area.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_slider.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_spacer.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_split.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_stack.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_string_dialog.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_style_loader.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_style_util.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_tabview.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_tooltip.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_tooltip_area.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_tooltip_data.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_tristate.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_value_edit.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_viewport.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_window.hpp" />
+    <ClInclude Include="..\..\..\source\viral_gui\gui_window_area.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{121B8A17-FC25-4C1F-87FF-CD9A5641F547}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>viral_gui</RootNamespace>
+    <ProjectName>viral_gui</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="..\props\build_common.props" />
+    <Import Project="..\props\build_type_library.props" />
+    <Import Project="..\props\build_mode_debug.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="..\props\build_common.props" />
+    <Import Project="..\props\build_type_library.props" />
+    <Import Project="..\props\build_mode_release.props" />
+  </ImportGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Required for VS properties dialog to work. -->
+  <ItemDefinitionGroup>
+    <ClCompile />
+    <Link />
+  </ItemDefinitionGroup>
+</Project>
