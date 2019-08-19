@@ -14,9 +14,6 @@
     <ClCompile Include="..\..\..\external\libvorbis\lib\analysis.c">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\external\libvorbis\lib\barkmel.c">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\external\libvorbis\lib\bitrate.c">
       <Filter>Sources</Filter>
     </ClCompile>

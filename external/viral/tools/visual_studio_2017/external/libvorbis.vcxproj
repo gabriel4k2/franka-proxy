@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\external\libvorbis\lib\analysis.c" />
-    <ClCompile Include="..\..\..\external\libvorbis\lib\barkmel.c" />
     <ClCompile Include="..\..\..\external\libvorbis\lib\bitrate.c" />
     <ClCompile Include="..\..\..\external\libvorbis\lib\block.c" />
     <ClCompile Include="..\..\..\external\libvorbis\lib\codebook.c" />
