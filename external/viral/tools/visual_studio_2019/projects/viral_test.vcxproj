@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\icons\viral_test.ico" />
+    <None Include="..\profiling\viral_test.psess" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\icons\viral_test.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\source\viral_test\test_allocator.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_audio.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_bimap.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_array.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_boolean_term.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_bounding_implicit.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_bounding_tree.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_bounding_builder.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_buffer.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_cache.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_color.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_deque.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_file.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_font.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_framework.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_2d.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_3d.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_distance.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_intersect.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_primitive.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_raycast.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_geo_volume.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_gui.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_heap.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_mesh_distance.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_mesh_intersect.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_mesh_scene.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_mulock.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_network.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_network_serialize.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_network_stream.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_network_transfer.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_integer.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_render.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_hash.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_image.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_input.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_list.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_log.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_memory.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_mesh.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_owning.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_pointer.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_render_blend.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_render_shader.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_scope_guard.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\select_tests.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_render_shadow.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_skeleton.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_string.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_thread.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_tree.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_window.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_xml.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\test_zlib.cpp" />
+    <ClCompile Include="..\..\..\source\viral_test\viral_test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\source\viral_test\test_framework.hpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{94AAA072-EAC9-4034-824A-EA4100B4883A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>viral_test</RootNamespace>
+    <ProjectName>viral_test</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="..\props\build_common.props" />
+    <Import Project="..\props\build_type_app.props" />
+    <Import Project="..\props\build_app_console.props" />
+    <Import Project="..\props\build_mode_debug.props" />
+    <Import Project="..\props\build_copy_assets.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="..\props\build_common.props" />
+    <Import Project="..\props\build_type_app.props" />
+    <Import Project="..\props\build_app_console.props" />
+    <Import Project="..\props\build_mode_release.props" />
+    <Import Project="..\props\build_copy_assets.props" />
+  </ImportGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Required for VS properties dialog to work. -->
+  <ItemDefinitionGroup>
+    <ClCompile />
+    <Link />
+  </ItemDefinitionGroup>
+</Project>
