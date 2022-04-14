@@ -150,7 +150,7 @@ void csv_parser(csv_data data) {
 
 std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> give_x_movement_positions(Eigen::Vector3d start_pos) {
 	//desired x position
-	double a = -0.02; //[m/s^2]
+	double a = -0.025; //[m/s^2]
 	double t = 8.0; // must be greater than 2.0
 	Eigen::Vector3d pos;
 	pos = start_pos;
@@ -158,7 +158,7 @@ std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> give_x_m
 	std::vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> desired_positions;
 
 	for (double i = 0; i < 1.0; i += 0.001) { // 1s linear increasing velocity
-		pos(0) = 0.5 * a * i * i + start_pos(0);
+		pos(0) = 0.5 * a * i * i + start_pos(0); // s(t=1) = 0.5*a
 		des_pos.push_back(pos);
 	}
 	for (double i = 0; i < (t-2.0); i += 0.001) { // t - 2s constant velocity
@@ -250,18 +250,15 @@ csv_data apply_z_force(franka_proxy::franka_hardware_controller& h_controller, s
 	std::array<double, 7> pos_10 = { 0.0166511, 0.777224, -0.0173561, -1.61821, 0.020813, 2.45273, 0.724666 }; //10mm above wood plate with blue part
 	std::array<double, 7> pos_2 = { 0.0173603, 0.782011, -0.0172685, -1.61904, 0.0207746, 2.45505, 0.724928 }; //2mm above wood plate with blue part
 	std::array<double, 7> pos_0 = { 0.0159666, 0.784819, -0.0174431, -1.6166, 0.0208109, 2.45508, 0.724577 }; //0mm above wood plate with blue part
-
+	std::array<double, 7> pos_0_b = { 0.00167622, 0.583144, -0.00122744, -2.04601, 0.008703, 2.69809, 0.716798 }; //0mm above wood plate with bearing for x_movement
+	std::array<double, 7> pos_5_b = { 0.000821532, 0.563336, -0.00267677, -2.05768, 0.00858097, 2.69578, 0.716801 }; //5mm above wood plate with bearing for x_movement
 	std::array<double, 7> pos_air_x = { 0.0445302, 0.157452, -0.0226488, -2.44288, 0.0199934, 2.7444, 0.778894 }; //in air (middle) for linear x movement
-	try {
-		h_controller.move_to(pos_air_x);
-	}
-	catch (const franka::Exception& e) {
-		std::cout << "catched Exception when moving to air position: " << e.what() << std::endl;
-	}
+	std::array<double, 7> pos_air_x_b = { 0.0311876, 0.256293, -0.00171765, -2.62387, 0.00780726, 3.03017, 0.7313 }; //in air (middle) for linear x movement with bearing (lower)
 
+	
 	try {
-		h_controller.move_to(pos_10);
-		h_controller.move_to(pos_0);
+		h_controller.move_to(pos_5_b);
+		h_controller.move_to(pos_0_b);
 	}
 	catch (const franka::Exception& e) {
 		std::cout << "catched Exception when moving to start position: " << e.what() << std::endl;
@@ -310,6 +307,13 @@ csv_data apply_z_force(franka_proxy::franka_hardware_controller& h_controller, s
 		std::cout << "catched Exception: " << e.what() << std::endl;
 		h_controller.automatic_error_recovery();
 		throw;
+	}
+
+	try {
+		h_controller.move_to(pos_air_x_b);
+	}
+	catch (const franka::Exception& e) {
+		std::cout << "catched Exception when moving to air position: " << e.what() << std::endl;
 	}
 
 	data.ise_position = calculate_ISE(data.position_error);
@@ -373,7 +377,7 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 	x_pos, y_pos, z_pos, mx_pos, my_pos, mz_pos, x_f, y_f, z_f, mx_f, my_f, mz_f
 	};
 
-	Eigen::Vector3d x_pos_max(500, 50, 0.01);
+	Eigen::Vector3d x_pos_max(7500, 5000, 50.0);
 	Eigen::Vector3d y_pos_max(200, 30, 0);
 	Eigen::Vector3d z_pos_max(200, 30, 0);
 	Eigen::Vector3d mx_pos_max(30, 5, 0);
@@ -407,7 +411,7 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 	csv_data data{};
 
 	double initial_F = 0.0;
-	double p_factor = 1.0;
+	double p_factor = 100.0;
 	double f_factor = 1.0;
 
 	std::cout << "Evaluating first random parameter set..." << std::endl;
@@ -436,6 +440,11 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 	}
 	catch (const franka::Exception& e) {
 		std::cout << "First random set of parameters caused an exception..." << std::endl;
+		for (int d = 0; d < 12; d++) {
+			if (dim[d] != 1) continue;
+			std::cout << " Dim: " << d << " (" <<
+				initial_parameters[d](0) << ", " << initial_parameters[d](1) << ", " << initial_parameters[d](2) << ")";
+		}
 		throw;
 	}
 
@@ -444,7 +453,7 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 	std::array<Eigen::Vector3d, 12> current_parameters = initial_parameters;
 	std::array<Eigen::Vector3d, 12> best_parameters = initial_parameters;
 
-	double T = 0.1; //initial T
+	double T = 5.0; //initial T
 	double eta = 0.25; //initial eta
 	int c = 0; //counter for consecutive remaining parameterVector
 	int c_max = 10;
@@ -454,10 +463,10 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 	double mu = 0.0;
 
 	double sigma = 1.0;
-	double l = 0.99;
-	double delta_F = 0.01;
+	double l = 0.97;
+	double delta_F = 0.1;
 
-	int m = 1; //the median of m F values will be used
+	int m = 3; //the median of m F values will be used
 
 	while (c < c_max && exc < exc_max) {
 
@@ -465,15 +474,12 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 		std::normal_distribution<double> nd(mu, sigma);
 		std::array<Eigen::Vector3d, 12> new_parameters = current_parameters;
 
-		std::cout << new_parameters[0](0) << ", " << new_parameters[0](1) << ", " << new_parameters[0](2) << std::endl;
-
 		for (int d = 0; d < 12; d++) {
 			if (dim[d] != 1) continue;
 
 			for (int j = 0; j < 3; j++) {
 				do {
 					new_parameters[d](j) = current_parameters[d](j) + eta * nd(gen) * max_parameters[d](j);
-					std::cout << "trying to find a new parameter set: " << j << std::endl;
 				} while (new_parameters[d](j) > max_parameters[d](j) || new_parameters[d](j) < 0);
 			}
 		}
@@ -531,20 +537,25 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 		//printing on console (K_D is printed on console with a factor 1000)
 		std::cout << std::fixed;
 		std::cout << std::setprecision(4);
+		std::cout << "k=" << k << "\tT=" << T << "\tbestF=" << best_F << "\tcurrentF=" << current_F << "\tnewF=" << new_F << "\tc=" << c;
+		if ((exp(-(new_F - current_F) / T)) < 1.0) {
+			std::cout << "\tprop_worse = " << (exp(-(new_F - current_F) / T));
+		}
+		std::cout << "\n";
 		for (int d = 0; d < 12; d++) {
 			if (dim[d] != 1) continue;
 
-			std::cout << "Dimension: " << d << std::endl;
-			std::cout << "k=" << k << "\tT=" << T
-				<< "\tbestF=" << best_F << "\tcurrentF=" << current_F << "\tnewF=" << new_F
-				<< "\tcurrentParams=(" << current_parameters[d](0) << "," << current_parameters[d](1) << "," << 1000 * current_parameters[d](2) << ")"
-				<< "\tnewParams=(" << new_parameters[d](0) << "," << new_parameters[d](1) << "," << 1000.0 * new_parameters[d](2) << ")"
-				<< "    c=" << c;
-			if ((exp(-(new_F - current_F) / T)) < 1.0) {
-				std::cout << "    prop_worse = " << (exp(-(new_F - current_F) / T));
+			std::cout << "Dim=" << d;
+			if (d < 6) {
+				std::cout << "\tF_part=" << (p_factor * data.itae_position(d, 0));
 			}
-			std::cout << "\n";
+			else {
+				std::cout << "\tF_part=" << (f_factor * data.itae_force(d - 6, 0));
+			}
+			std::cout << "\tcurrentParams=(" << current_parameters[d](0) << "," << current_parameters[d](1) << "," << 1000 * current_parameters[d](2) << ")"
+				<< "\tnewParams=(" << new_parameters[d](0) << "," << new_parameters[d](1) << "," << 1000.0 * new_parameters[d](2) << ")\n";
 		}
+		std::cout << "\n";
 		
 
 		//write values in sa_overview.csv
@@ -619,37 +630,7 @@ int main() {
 	};
 	simulatedAnnnealing(h_controller, dim);
 
-
-	////Position Parameters
-	//std::array<double, 6> k_p_p = { -3000, -100, -100, -100, -1500, -100 };
-	//std::array<double, 6> k_i_p = { 0, 0, 0, 0, 0, 0 };
-	//std::array<double, 6> k_d_p = { 0, 0, 0, 0, 0, 0 };
-
-	////Ziegler Nichols Method Force Parameters
-	//std::array<double, 6> k_p_f = { 0.2, 0.2, 0.02, 0.02, 0.05, 0.05 };
-	//std::array<double, 6> k_i_f = { 5, 5, 2, 0.5, 0.5, 0.5 };
-	//std::array<double, 6> k_d_f = { 0, 0, 0, 0, 0, 0 };
-
-	//std::array<std::array<double, 6>, 6> control_parameters;
-	//control_parameters = { k_p_p, k_i_p, k_d_p, k_p_f, k_i_f, k_d_f };
-	//
-
-	//csv_data data{};
-	//apply_z_force(h_controller, control_parameters, data);
-
-	/*for (int i = 0; i < 20; i++) {
-		csv_data data{};
-		apply_z_force(h_controller, control_parameters, data);
-		std::cout << data.itae_force(2) << std::endl;
-	}*/
-
-	//std::array<double, 7> pos_air_x = { 0.0445302, 0.157452, -0.0226488, -2.44288, 0.0199934, 2.7444, 0.778894 }; //in air (middle) for linear x movement
-	//try {
-	//	h_controller.move_to(pos_air_x);
-	//}
-	//catch (const franka::Exception& e) {
-	//	std::cout << "catched Exception when moving to air position: " << e.what() << std::endl;
-	//}
+	//print_cur_joint_pos(h_controller);
 
 	return 0;
 }
