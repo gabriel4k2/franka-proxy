@@ -623,16 +623,16 @@ void simulatedAnnnealing(franka_proxy::franka_hardware_controller& h_controller,
 	}
 }
 
-void validate_params(franka_proxy::franka_hardware_controller& h_controller) {
-	Eigen::Vector3d x_pos(12000, 0, 0);
-	Eigen::Vector3d y_pos(200, 30, 0);
+void validate_params(franka_proxy::franka_hardware_controller& h_controller, int dim[12]) {
+	Eigen::Vector3d x_pos(1500, 500, 0);
+	Eigen::Vector3d y_pos(1500, 0, 0);
 	Eigen::Vector3d z_pos(200, 30, 0);
 	Eigen::Vector3d mx_pos(30, 5, 0);
 	Eigen::Vector3d my_pos(30, 5, 0);
 	Eigen::Vector3d mz_pos(20, 5, 0);
 	Eigen::Vector3d x_f(0.5, 5, 0);
 	Eigen::Vector3d y_f(0.5, 5, 0);
-	Eigen::Vector3d z_f(0, 9, 0);
+	Eigen::Vector3d z_f(0.2, 15, 0);
 	Eigen::Vector3d mx_f(0.05, 0.5, 0);
 	Eigen::Vector3d my_f(0.05, 0.5, 0);
 	Eigen::Vector3d mz_f(0.05, 0.5, 0);
@@ -661,28 +661,40 @@ void validate_params(franka_proxy::franka_hardware_controller& h_controller) {
 	sa_data_file.close();
 	
 	int l = 20;
-	double f_factor = 1.0;
 	double p_factor = 100.0;
+	double f_factor = 1.0;
 
 	for (int i = 0; i < l; i++) {
+		std::cout << "Durchlauf: " << i << "/" << l << std::endl;
 		csv_data data{};
 		apply_z_force(h_controller, control_parameters, data);
 		sa_data_file.open(filename, std::ofstream::out | std::ofstream::app);
-		sa_data_file << (i+1) << "," << (p_factor * data.itae_position(0, 0) + f_factor * data.itae_force(2, 0)) << "\n";
+		double F_p = 0.0;
+		double F_f = 0.0;
+		for (int d = 0; d < 12; d++) {
+			if (dim[d] != 1) continue;
+			if (d < 6) {
+				F_p += p_factor * data.itae_position(d, 0);
+			}
+			else {
+				F_f += f_factor * data.itae_force(d - 6, 0);
+			}
+		}
+		sa_data_file << (i+1) << "," << (F_p + F_f) << "\n";
 		sa_data_file.close();
 	}
 }
 
-void manual_testing(franka_proxy::franka_hardware_controller& h_controller) {
-	Eigen::Vector3d x_pos(800, 0, 0);
-	Eigen::Vector3d y_pos(800, 0, 0);
+void manual_testing(franka_proxy::franka_hardware_controller& h_controller, int dim[12]) {
+	Eigen::Vector3d x_pos(1500, 500, 0);
+	Eigen::Vector3d y_pos(1500, 0, 0);
 	Eigen::Vector3d z_pos(200, 30, 0);
 	Eigen::Vector3d mx_pos(30, 5, 0);
 	Eigen::Vector3d my_pos(30, 5, 0);
 	Eigen::Vector3d mz_pos(20, 5, 0);
 	Eigen::Vector3d x_f(0.5, 5, 0);
 	Eigen::Vector3d y_f(0.5, 5, 0);
-	Eigen::Vector3d z_f(0, 9, 0);
+	Eigen::Vector3d z_f(0.2, 15, 0);
 	Eigen::Vector3d mx_f(0.05, 0.5, 0);
 	Eigen::Vector3d my_f(0.05, 0.5, 0);
 	Eigen::Vector3d mz_f(0.05, 0.5, 0);
@@ -716,8 +728,15 @@ void manual_testing(franka_proxy::franka_hardware_controller& h_controller) {
 		catch (const franka::Exception& e) {
 			std::cout << e.what() << std::endl;
 		}
-		F_p += p_factor * data.itae_position(0, 0);
-		F_f += f_factor * data.itae_force(2, 0);
+		for (int d = 0; d < 12; d++) {
+			if (dim[d] != 1) continue;
+			if (d < 6) {
+				F_p += p_factor * data.itae_position(d, 0);
+			}
+			else {
+				F_f += f_factor * data.itae_force(d - 6, 0);
+			}
+		}
 	}
 	F_p = F_p / m;
 	F_f = F_f / m;
@@ -733,14 +752,21 @@ int main() {
 	std::this_thread::sleep_for(std::chrono::seconds(2));
 
 	int dim[12] = {
-		1,0,0,0,0,0, //position (x, y, z, mx, my, mz)
+		1,1,0,0,0,0, //position (x, y, z, mx, my, mz)
 		0,0,1,0,0,0 //force (x, y, z, mx, my, mz)
 	};
+
+	for (int i = 0; i < 6; i++) {
+		if (dim[i] + dim[i + 6] > 1) {
+			std::cout << "Invalid Dimension Array!" << std::endl;
+			return 0;
+		}
+	}
 	//simulatedAnnnealing(h_controller, dim);
-	//validate_params(h_controller);
+	validate_params(h_controller, dim);
 	//print_cur_joint_pos(h_controller);
 
-	manual_testing(h_controller);
+	//manual_testing(h_controller, dim);
 
 	return 0;
 }
