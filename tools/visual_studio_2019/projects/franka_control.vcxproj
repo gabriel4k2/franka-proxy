@@ -14,17 +14,12 @@
     <ClCompile Include="..\..\..\source\franka_control\franka_controller.cpp" />
     <ClCompile Include="..\..\..\source\franka_control\franka_controller_emulated.cpp" />
     <ClCompile Include="..\..\..\source\franka_control\franka_controller_remote.cpp" />
-    <ClCompile Include="..\..\..\source\franka_control\franka_util.cpp" />
-    <ClCompile Include="..\..\..\source\franka_control\ikfast.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\source\franka_control\exception.hpp" />
     <ClInclude Include="..\..\..\source\franka_control\forward.hpp" />
     <ClInclude Include="..\..\..\source\franka_control\franka_controller.hpp" />
     <ClInclude Include="..\..\..\source\franka_control\franka_controller_emulated.hpp" />
     <ClInclude Include="..\..\..\source\franka_control\franka_controller_remote.hpp" />
-    <ClInclude Include="..\..\..\source\franka_control\franka_util.hpp" />
-    <ClInclude Include="..\..\..\source\franka_control\ikfast.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3125ED9C-58B1-4EA5-9214-9178EF9C8EB7}</ProjectGuid>
