@@ -12,7 +12,7 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "D:/wanierke/source/repos/franka_proxy/tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
       }
     },
     {
