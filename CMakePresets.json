@@ -9,17 +9,17 @@
     {
       "name": "common-config",
       "hidden": true,
-      "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "K:/vcpkgs/vcpkg_03_06_2024/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+		"CMAKE_C_COMPILER": "cl.exe",
+		"CMAKE_CXX_COMPILER": "cl.exe"
       }
     },
     {
       "name": "Debug",
       "inherits": "common-config",
       "hidden": false,
-      "installDir": "${sourceDir}/Debug/",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
@@ -28,7 +28,6 @@
       "name": "Release-with-Debug-info",
       "inherits": "common-config",
       "hidden": false,
-      "installDir": "${sourceDir}/RelWithDebInfo/",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       }
@@ -37,7 +36,7 @@
       "name": "Release",
       "inherits": "common-config",
       "hidden": false,
-      "installDir": "${sourceDir}/Release/",
+      "installDir": "${sourceDir}/install/",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
