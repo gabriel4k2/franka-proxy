@@ -2,7 +2,7 @@
   "version": 4,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 19,
+    "minor": 20,
     "patch": 0
   },
   "configurePresets": [
@@ -11,8 +11,9 @@
       "hidden": true,
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "CMAKE_CXX_COMPILER": "cl.exe"
+        "CMAKE_TOOLCHAIN_FILE": "C:/code/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "Qt5_DIR": "C:/code/qt/5.15.2/msvc2019_64/lib/cmake/Qt5"
       }
     },
     {
@@ -42,20 +43,6 @@
     }
   ],
   "buildPresets": [
-    {
-      "name": "Debug",
-      "configurePreset": "Debug"
-    },
-    {
-      "name": "Release-with-Debug-info",
-      "configurePreset": "Release-with-Debug-info"
-    },
-    {
-      "name": "Release",
-      "configurePreset": "Release"
-    }
-  ],
-  "testPresets": [
     {
       "name": "Debug",
       "configurePreset": "Debug"
