@@ -214,7 +214,7 @@ std::pair<Eigen::Matrix<double, 6, 1>, Eigen::Matrix<double, 6, 1>> motion_recor
 
 	Eigen::Matrix3d R_rel = R_prev.transpose() * R;
 
-	Eigen::JacobiSVD svd(R_rel, Eigen::ComputeFullU | Eigen::ComputeFullV);
+	Eigen::JacobiSVD<Eigen::Matrix3d> svd(R_rel, Eigen::ComputeFullU | Eigen::ComputeFullV);
 	Eigen::Matrix3d R_rel_orth = svd.matrixU() * svd.matrixV().transpose();
 
 	Eigen::AngleAxisd aa(R_rel_orth);
