@@ -30,7 +30,23 @@
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
-
+    // MSVC Preset
+    {
+      "name": "windows-msvc",
+      "inherits": "windows-common",
+      "generator": "Visual Studio 18 2026",
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "Visual Studio"
+        }
+      },
+      "cacheVariables": {
+        "VCPKG_MANIFEST_FEATURES": {
+          "type": "STRING",
+          "value": "server;tests"
+        }
+      }
+    },
     // Windows WSL2 presets
     {
       "name": "wsl-common",
@@ -39,7 +55,7 @@
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "~/code/vcpkg/scripts/buildsystems/vcpkg.cmake"
-	}
+	    }
     },
     {
       "name": "wsl-debug",
