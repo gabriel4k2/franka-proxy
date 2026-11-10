@@ -8,6 +8,11 @@ index c3b03ef..187827e 100644
  
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
  
+@@ -14,3 +14,3 @@
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 @@ -21,8 +21,8 @@ else()
    add_compile_options(-Wall -Wextra)
  endif()
