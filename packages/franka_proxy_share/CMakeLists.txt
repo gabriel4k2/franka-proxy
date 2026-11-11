@@ -25,6 +25,7 @@ target_sources(${LIB_NAME}
     ${INCLUDE_DIR}/franka_proxy_logger.hpp
     ${INCLUDE_DIR}/franka_proxy_util.hpp
     ${INCLUDE_DIR}/ikfast.h
+    ${INCLUDE_DIR}/motion_timing.hpp
 )
 
 target_link_libraries(${LIB_NAME}

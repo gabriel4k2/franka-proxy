@@ -8,6 +8,10 @@ option(BUILD_SERVER "Build franka_proxy executable" ON)
 option(BUILD_TESTS "Build franka_proxy tests" ON)
 option(BUILD_PYTHON_CONTROLLER "Build franka_control python bindings" OFF)
 
+if(BUILD_TESTS)
+    enable_testing()
+endif()
+
 
 find_package(asio CONFIG REQUIRED)
 find_package(Eigen3 CONFIG REQUIRED)

@@ -16,6 +16,8 @@
 #include <franka/robot.h>
 #include <franka/model.h>
 
+#include "sequence_tracking_statistics.hpp"
+
 
 namespace franka_proxy::detail
 {
@@ -43,7 +45,8 @@ public:
 		const std::atomic_bool& stop_motion_flag,
 		std::vector<std::array<double, 7>> q_sequence,
 		std::vector<std::array<double, 6>> f_sequence,
-		std::vector<std::array<double, 6>> selection_vector_sequence
+		std::vector<std::array<double, 6>> selection_vector_sequence,
+		unsigned long long timing_id
 	);
 
 	~seq_cart_vel_tau_generator();
@@ -76,6 +79,18 @@ private:
 	franka::Model model;
 
 	double time_ = 0.0;
+
+	unsigned long long timing_id_;
+	sequence_tracking_statistics timing_;
+	const char* timing_outcome_ = "incomplete";
+	size_t timing_last_step_ = 0;
+	size_t timing_clock_rewinds_ = 0;
+	bool timing_have_target_ = false;
+	bool timing_has_offset_ = false;
+	std::array<double, 7> timing_first_q_{};
+	std::array<double, 7> timing_first_q_d_{};
+	std::array<double, 7> timing_last_q_{};
+	std::array<double, 7> timing_last_q_d_{};
 
 	const std::vector<std::array<double, 7>> q_sequence_;
 	const std::vector<std::array<double, 6>> f_sequence_;

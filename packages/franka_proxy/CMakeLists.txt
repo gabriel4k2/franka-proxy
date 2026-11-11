@@ -33,6 +33,7 @@ target_sources(${EXE_NAME}
     ${INCLUDE_DIR}/motion_generator_joint_max_accel.hpp
     ${INCLUDE_DIR}/motion_generator_seq_cart_vel_tau.hpp
     ${INCLUDE_DIR}/motion_recorder.hpp
+    ${INCLUDE_DIR}/sequence_tracking_statistics.hpp
 )
 
 target_link_libraries(${EXE_NAME}
@@ -90,3 +91,10 @@ install(
     DESTINATION "${CMAKE_INSTALL_BINDIR}/assets"
 )
 # assets end
+
+if(BUILD_TESTS)
+    add_executable(franka_sequence_timing_test tests/sequence_timing_test.cpp)
+    target_include_directories(franka_sequence_timing_test PRIVATE ${INCLUDE_DIR})
+    target_link_libraries(franka_sequence_timing_test PRIVATE franka_proxy_share)
+    add_test(NAME sequence_timing_offline COMMAND franka_sequence_timing_test)
+endif()
