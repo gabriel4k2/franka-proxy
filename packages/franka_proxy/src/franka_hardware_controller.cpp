@@ -20,6 +20,8 @@
 #include <franka/exception.h>
 #include <franka/model.h>
 
+#include <franka_proxy_share/motion_timing.hpp>
+
 #include "motion_generator_admittance.hpp"
 #include "motion_generator_force.hpp"
 #include "motion_generator_joint_impedance.hpp"
@@ -776,21 +778,28 @@ franka_hardware_controller::recording_for(float seconds, std::optional<std::stri
 void franka_hardware_controller::move_sequence(
 	const std::vector<std::array<double, 7>>& q_sequence)
 {
+	const auto batch = detail::next_motion_timing_id();
+	detail::motion_phase_log total("server", batch, "sequence_total", q_sequence.size());
+	detail::motion_phase_log setup("server", batch, "generator_setup", q_sequence.size());
 	std::vector<std::array<double, 6>> f_sequence(q_sequence.size(), {0, 0, 0, 0, 0, 0});
 	std::vector<std::array<double, 6>> selection_vector_sequence(q_sequence.size(), {1, 1, 1, 1, 1, 1});
 
 	stop_motion_ = false;
 	detail::seq_cart_vel_tau_generator motion_generator(
 		robot_state_lock_, robot_state_, robot_, stop_motion_,
-		q_sequence, f_sequence, selection_vector_sequence);
+		q_sequence, f_sequence, selection_vector_sequence, batch);
+	setup.finish();
 
 	try
 	{
+		detail::motion_phase_log handoff("server", batch, "state_handoff", q_sequence.size());
 		set_control_loop_running(true);
 		{
 			// Lock the current_state_lock_ to wait for state_thread_ to finish.
 			std::lock_guard state_guard(robot_state_lock_);
 		}
+		handoff.finish();
+		detail::motion_phase_log control("server", batch, "control", q_sequence.size());
 
 		robot_.control(
 			[&](const franka::RobotState& robot_state,
@@ -817,21 +826,28 @@ void franka_hardware_controller::move_sequence(
 void franka_hardware_controller::move_sequence(
 	const std::vector<std::array<double, 7>>& q_sequence, double f_z)
 {
+	const auto batch = detail::next_motion_timing_id();
+	detail::motion_phase_log total("server", batch, "sequence_total", q_sequence.size());
+	detail::motion_phase_log setup("server", batch, "generator_setup", q_sequence.size());
 	std::vector<std::array<double, 6>> f_sequence(q_sequence.size(), {0, 0, f_z, 0, 0, 0});
 	std::vector<std::array<double, 6>> selection_vector_sequence(q_sequence.size(), {1, 1, 0, 1, 1, 1});
 
 	stop_motion_ = false;
 	detail::seq_cart_vel_tau_generator motion_generator(
 		robot_state_lock_, robot_state_, robot_, stop_motion_,
-		q_sequence, f_sequence, selection_vector_sequence);
+		q_sequence, f_sequence, selection_vector_sequence, batch);
+	setup.finish();
 
 	try
 	{
+		detail::motion_phase_log handoff("server", batch, "state_handoff", q_sequence.size());
 		set_control_loop_running(true);
 		{
 			// Lock the current_state_lock_ to wait for state_thread_ to finish.
 			std::lock_guard state_guard(robot_state_lock_);
 		}
+		handoff.finish();
+		detail::motion_phase_log control("server", batch, "control", q_sequence.size());
 
 		robot_.control(
 			[&](const franka::RobotState& robot_state,
@@ -862,18 +878,25 @@ void franka_hardware_controller::move_sequence(
 	const std::array<double, 16>& offset_position,
 	const std::array<double, 6>& offset_force)
 {
+	const auto batch = detail::next_motion_timing_id();
+	detail::motion_phase_log total("server", batch, "sequence_total", q_sequence.size());
+	detail::motion_phase_log setup("server", batch, "generator_setup", q_sequence.size());
 	stop_motion_ = false;
 	detail::seq_cart_vel_tau_generator motion_generator(
 		robot_state_lock_, robot_state_, robot_, stop_motion_,
-		q_sequence, f_sequence, selection_vector);
+		q_sequence, f_sequence, selection_vector, batch);
+	setup.finish();
 
 	try
 	{
+		detail::motion_phase_log handoff("server", batch, "state_handoff", q_sequence.size());
 		set_control_loop_running(true);
 		{
 			// Lock the current_state_lock_ to wait for state_thread_ to finish.
 			std::lock_guard state_guard(robot_state_lock_);
 		}
+		handoff.finish();
+		detail::motion_phase_log control("server", batch, "control", q_sequence.size());
 
 		robot_.control([&](
 		               const franka::RobotState& robot_state,
@@ -902,18 +925,25 @@ void franka_hardware_controller::move_sequence(
 	const std::vector<wrench>& f_sequence,
 	const std::vector<selection_diagonal>& selection_vector)
 {
+	const auto batch = detail::next_motion_timing_id();
+	detail::motion_phase_log total("server", batch, "sequence_total", q_sequence.size());
+	detail::motion_phase_log setup("server", batch, "generator_setup", q_sequence.size());
 	stop_motion_ = false;
 	detail::seq_cart_vel_tau_generator motion_generator(
 		robot_state_lock_, robot_state_, robot_, stop_motion_,
-		q_sequence, f_sequence, selection_vector);
+		q_sequence, f_sequence, selection_vector, batch);
+	setup.finish();
 
 	try
 	{
+		detail::motion_phase_log handoff("server", batch, "state_handoff", q_sequence.size());
 		set_control_loop_running(true);
 		{
 			// Lock the current_state_lock_ to wait for state_thread_ to finish.
 			std::lock_guard state_guard(robot_state_lock_);
 		}
+		handoff.finish();
+		detail::motion_phase_log control("server", batch, "control", q_sequence.size());
 
 		robot_.control([&](
 		               const franka::RobotState& robot_state,

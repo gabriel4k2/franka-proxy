@@ -14,6 +14,7 @@
 
 #include <franka_proxy_client/franka_remote_interface.hpp>
 #include "franka_proxy_share/franka_proxy_util.hpp"
+#include <franka_proxy_share/motion_timing.hpp>
 
 
 namespace franka_control
@@ -197,6 +198,14 @@ void franka_controller_remote::move_sequence(
 	const std::optional<std::array<double, 16>>& offset_cartesian,
 	const std::optional<std::array<double, 6>>& offset_force)
 {
+	const auto batch = franka_proxy::detail::next_motion_timing_id();
+	franka_proxy::detail::motion_phase_log total("client", batch, "native_total", q_sequence.size());
+	franka_proxy::detail::motion_phase_log preparation("client", batch, "prepare", q_sequence.size());
+	const auto run_phase = [&](const char* name, auto&& operation) {
+		franka_proxy::detail::motion_phase_log phase("client", batch, name, q_sequence.size());
+		operation();
+	};
+
 	std::vector<std::array<double, 7>> joints(q_sequence.size());
 	std::vector<std::array<double, 6>> forces(f_sequence.size());
 	std::vector<std::array<double, 6>> selections(selection_sequence.size());
@@ -224,15 +233,19 @@ void franka_controller_remote::move_sequence(
 		const robot_config_7dof result_front = apply_offset(q_sequence.front());
 		const robot_config_7dof result_back = apply_offset(q_sequence.back());
 
-		controller_->move_to(result_front);
-		controller_->move_sequence(joints, forces, selections, *offset_cartesian, *offset_force);
-		controller_->move_to(result_back);
+		preparation.finish();
+		run_phase("leading_p2p", [&] { controller_->move_to(result_front); });
+		run_phase("core_sequence", [&] {
+			controller_->move_sequence(joints, forces, selections, *offset_cartesian, *offset_force);
+		});
+		run_phase("trailing_p2p", [&] { controller_->move_to(result_back); });
 	}
 	else
 	{
-		controller_->move_to(joints.front());
-		controller_->move_sequence(joints, forces, selections);
-		controller_->move_to(joints.back());
+		preparation.finish();
+		run_phase("leading_p2p", [&] { controller_->move_to(joints.front()); });
+		run_phase("core_sequence", [&] { controller_->move_sequence(joints, forces, selections); });
+		run_phase("trailing_p2p", [&] { controller_->move_to(joints.back()); });
 	}
 }
 

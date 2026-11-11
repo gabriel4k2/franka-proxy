@@ -13,6 +13,8 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
+#include <cstdio>
+#include <exception>
 
 #include <Eigen/Dense>
 
@@ -37,11 +39,13 @@ seq_cart_vel_tau_generator::seq_cart_vel_tau_generator(
 	const std::atomic_bool& stop_motion_flag,
 	std::vector<std::array<double, 7>> q_sequence,
 	std::vector<std::array<double, 6>> f_sequence,
-	std::vector<std::array<double, 6>> selection_vector_sequence)
+	std::vector<std::array<double, 6>> selection_vector_sequence,
+	unsigned long long timing_id)
 	: current_state_lock_(current_state_lock),
 	  current_state_(current_state),
 	  stop_motion_(stop_motion_flag),
 	  model(robot.loadModel()),
+	  timing_id_(timing_id),
 	  q_sequence_(std::move(q_sequence)),
 	  f_sequence_(std::move(f_sequence)),
 	  selection_vector_sequence_(std::move(selection_vector_sequence)),
@@ -67,6 +71,40 @@ seq_cart_vel_tau_generator::seq_cart_vel_tau_generator(
 
 seq_cart_vel_tau_generator::~seq_cart_vel_tau_generator()
 {
+	// The control callback has returned (or unwound) before this summary is printed.
+	std::fprintf(stderr,
+		"[move_sequence] side=server batch=%llu phase=tracking outcome=%s unwinding=%d "
+		"samples=%zu nominal_ms=%zu callbacks=%zu callback_elapsed_ms=%.3f progress_ms=%.3f "
+		"last_step=%zu stalled_callbacks=%zu stall_episodes=%zu stall_ms=%.3f "
+		"longest_stall_ms=%.3f clock_rewind_ms=%zu peak_error_mm=%.3f last_error_mm=%.3f "
+		"max_period_ms=%.3f position_offset=%d\n",
+		timing_id_, timing_outcome_, std::uncaught_exceptions() > 0,
+		q_sequence_.size(), q_sequence_.size(), timing_.callbacks, timing_.elapsed_s * 1000., time_ * 1000.,
+		timing_last_step_, timing_.stalled_callbacks, timing_.stall_episodes, timing_.stall_s * 1000.,
+		timing_.longest_stall_s * 1000., timing_clock_rewinds_,
+		timing_.peak_error_m * 1000., timing_.last_error_m * 1000., timing_.max_period_s * 1000.,
+		timing_has_offset_);
+	if (timing_have_target_)
+	{
+		const auto print_boundary = [&](const char* boundary, const auto& q, const auto& q_d, const auto& target) {
+			std::fprintf(stderr, "[move_sequence] side=server batch=%llu phase=tracking boundary=%s",
+				timing_id_, boundary);
+			const auto print_joints = [](const char* name, const auto& joints) {
+				std::fprintf(stderr, " %s=[", name);
+				for (size_t i = 0; i < joints.size(); ++i)
+					std::fprintf(stderr, "%s%.6f", i ? "," : "", joints[i]);
+				std::fputc(']', stderr);
+			};
+			print_joints("measured_q", q);
+			print_joints("robot_q_d", q_d);
+			print_joints("sequence_q", target);
+			std::fputc('\n', stderr);
+		};
+		print_boundary("start", timing_first_q_, timing_first_q_d_, q_sequence_.front());
+		print_boundary("end", timing_last_q_, timing_last_q_d_, q_sequence_[timing_last_step_]);
+	}
+	std::fflush(stderr);
+
 	if (log_)
 	{
 		try
@@ -102,13 +140,26 @@ franka::Torques seq_cart_vel_tau_generator::step(
 	std::optional<std::array<double, 16>> offset_position,
 	std::optional<std::array<double, 6>> offset_force)
 {
+	timing_.record_period(period.toSec());
+	if (timing_.callbacks == 1)
+	{
+		timing_first_q_ = robot_state.q;
+		timing_first_q_d_ = robot_state.q_d;
+	}
+	timing_last_q_ = robot_state.q;
+	timing_last_q_d_ = robot_state.q_d;
+	timing_has_offset_ = offset_position.has_value();
+
 	{
 		std::lock_guard state_guard(current_state_lock_);
 		current_state_ = robot_state;
 	}
 
 	if (stop_motion_)
+	{
+		timing_outcome_ = "stopped";
 		throw stop_motion_trigger();
+	}
 
 
 	bool contact_change_motion = false;
@@ -123,7 +174,10 @@ franka::Torques seq_cart_vel_tau_generator::step(
 	{
 		if ((eigen_vector7d(robot_state.q.data())
 			- eigen_vector7d(q_sequence_.front().data())).norm() > 0.01)
+		{
+			timing_outcome_ = "start_pose_rejected";
 			throw std::runtime_error("Aborting; too far away from starting pose!");
+		}
 	}
 
 	// q_end
@@ -133,6 +187,9 @@ franka::Torques seq_cart_vel_tau_generator::step(
 		motion_finished = true;
 	}
 
+
+	timing_last_step_ = current_step;
+	timing_have_target_ = true;
 
 	// get target variables
 	std::array<double, 7> q_d = q_sequence_[current_step];
@@ -190,12 +247,14 @@ franka::Torques seq_cart_vel_tau_generator::step(
 	error.tail(3) = -transform_d.linear() * error.tail(3);
 
 
+	const double raw_translation_error = error.head(3).norm();
 	if (error.head(3).norm() > 0.005 &&
 		selection_vector[0] == 1 && selection_vector[1] == 1 && selection_vector[2] == 1)
 	{
 		error.head(3) = error.head(3).normalized() * 0.005;
 		contact_change_motion = true;
 	}
+	timing_.record_tracking(raw_translation_error, contact_change_motion, period.toSec());
 
 
 	// spring damper system with damping ratio=1 and filtered dq
@@ -239,15 +298,23 @@ franka::Torques seq_cart_vel_tau_generator::step(
 	}
 
 	if (contact_change_motion)
+	{
 		time_ -= 0.001; // period.toSec(); // stay at the same step 
+		++timing_clock_rewinds_;
+	}
 
 	if (!franka_proxy_util::is_tau_within_percentage_of_max_limit(tau_d, 0.3))
+	{
+		timing_outcome_ = "torque_limit";
 		throw std::runtime_error("Motion generator callback: Unreasonable tau at time " + std::to_string(time_));
+	}
 
 	std::array<double, 7> tau_d_array{};
 	Eigen::VectorXd::Map(tau_d_array.data(), 7) = tau_d;
 	franka::Torques output(tau_d_array);
 	output.motion_finished = motion_finished;
+	if (motion_finished)
+		timing_outcome_ = "finished";
 	return output;
 }
 
