@@ -1,4 +1,6 @@
 /build
+/build-streaming
+/streaming/**/__pycache__/
 /out
 /install
 /Debug
