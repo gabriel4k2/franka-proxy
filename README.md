@@ -80,17 +80,18 @@ On the already-configured Windows lab checkout, enable the binding and offline t
 
 ```powershell
 cmake -S . -B build -DBUILD_SERVER=ON -DBUILD_TESTS=ON -DBUILD_PYTHON_CONTROLLER=ON
-just build
-just test
+make build
+make test
 ```
 
 This reuses the existing build's vcpkg toolchain and Python interpreter. A fresh
-checkout still needs the toolchain configuration described above. Without `just`,
-use `cmake --build build --config Release` and
+checkout still needs the toolchain configuration described above. The Makefile
+uses GNU Make; the equivalent direct commands are
+`cmake --build build --config Release` and
 `ctest --test-dir build -C Release -R '^sequence_timing_offline$' --output-on-failure`.
-`just test` runs only hardware-free timing checks, never the robot-facing examples.
-On Linux the justfile defaults to `out/build/linux-release`; override a custom path
-with `just --set build_dir PATH build` (or `test`).
+`make test` runs only hardware-free timing checks, never the robot-facing examples.
+The Makefile defaults to `build` on Windows and `out/build/linux-release` on
+Linux; override a custom path with `make build BUILD_DIR="PATH"` (or `test`).
 
 For the existing Windows layout, point the client at the rebuilt binding:
 
